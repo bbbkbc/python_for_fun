@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import cv
 from mss.linux import MSS as mss
 from PIL import Image
 import time
@@ -14,7 +15,7 @@ w, h = template.shape[:: - 1]
 
 color_yellow = (70, 120, 35)
 
-mon = {'top': 70, 'left': 600, 'width': 110, 'height': 110}
+mon = {'top': 50, 'left': 600, 'width': 110, 'height': 110}
 
 
 def process_image(original_image):
@@ -39,7 +40,6 @@ def ss():
             op += 1
 
             print('op:', op)
-            count = 0
             for pt in zip(*loc[::-1]):
                 cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), (0, 255, 0), 3)
                 for p in img:
@@ -51,32 +51,31 @@ def ss():
                         pyautogui.mouseDown(button='left')
                         time.sleep(0.5)
                         pyautogui.mouseUp(button='left')
-                        x = 0
                         break
                     elif 627 < x < 680:
                         pyautogui.mouseDown(button='left')
                         time.sleep(1)
                         pyautogui.mouseUp(button='left')
-                        x = 0
                         break
-                    elif 593 < x <= 627:
+                    elif 596 < x <= 627:
                         pyautogui.mouseDown(button='left')
-                        time.sleep(1.75)
+                        time.sleep(1.753)
                         pyautogui.mouseUp(button='left')
-                        x = 0
                         break
-                    elif 100 < x <= 593:
+                    elif 100 < x <= 596:
                         pyautogui.mouseDown(button='left')
-                        time.sleep(2.6)
+                        if op <= 3:
+                            time.sleep(1.4)
+                        else:
+                            time.sleep(2.63)
                         pyautogui.mouseUp(button='left')
-                        x = 0
                         break
                     else:
                         continue
-                    break
                 else:
                     continue
                 break
+
             key = cv2.waitKey(1)
             if cv2.waitKey(25) & 0xFF == ord("q"):
                 cv2.destroyAllWindows()
@@ -99,30 +98,29 @@ def screen_record():
         mean = np.mean(processed_image)
         print('mean =', mean)
 
-        if mean <= float(0.16):
+        if mean <= float(0.14):
             print('Fish')
             pyautogui.click(button='left')
             break
         else:
             time.sleep(0.01)
             continue
-        return
+            return
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
         return
 
 
-while "Black":
+while True:
     time.sleep(1)
     pyautogui.moveTo(660, 260, duration=1)
     pyautogui.mouseDown(button='left')
-    time.sleep(1)
     pyautogui.moveTo(670, 270, duration=1)
     pyautogui.mouseUp(button='left')
-    time.sleep(2)
+    time.sleep(1)
+
     screen_record()
-
     time.sleep(0.01)
-    ss()
 
+    ss()
