@@ -47,31 +47,39 @@ def ss():
                     x = (pt[0])
                     y = (pt[1])
                     print('pos', x)
-                    if x >= 680:
+                    if x >= 670:
                         pyautogui.mouseDown(button='left')
                         time.sleep(0.5)
                         pyautogui.mouseUp(button='left')
+                        x = 0
                         break
-                    elif 627 < x < 680:
+                    elif 630 < x < 670:
                         pyautogui.mouseDown(button='left')
-                        time.sleep(1)
+                        time.sleep(1.1)
                         pyautogui.mouseUp(button='left')
+                        x = 0
                         break
-                    elif 596 < x <= 627:
+                    elif 596 < x <= 630:
                         pyautogui.mouseDown(button='left')
-                        time.sleep(1.753)
+                        if op <= 3:
+                            time.sleep(1.3)
+                        else:
+                            time.sleep(1.755)
                         pyautogui.mouseUp(button='left')
+                        x = 0
                         break
                     elif 100 < x <= 596:
                         pyautogui.mouseDown(button='left')
                         if op <= 3:
-                            time.sleep(1.4)
+                            time.sleep(2)
                         else:
-                            time.sleep(2.63)
+                            time.sleep(2.8)
                         pyautogui.mouseUp(button='left')
+                        x = 0
                         break
                     else:
                         continue
+                    break
                 else:
                     continue
                 break
@@ -86,10 +94,11 @@ def ss():
 def screen_record():
     sct = mss.mss()
     last_time = time.time()
-
+    time_reset = 0
     while True:
         img = sct.grab(mon)
         print('loop took {} seconds'.format(time.time() - last_time))
+        time_reset += (time.time() - last_time)
         last_time = time.time()
 
         img = np.array(img)
@@ -98,29 +107,60 @@ def screen_record():
         mean = np.mean(processed_image)
         print('mean =', mean)
 
+        if float(20) <= time_reset:
+            print('Timeout')
+            pyautogui.click(button='left')
+            break
+            return
+
         if mean <= float(0.14):
             print('Fish')
             pyautogui.click(button='left')
             break
+            return
         else:
             time.sleep(0.01)
             continue
-            return
-
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
         return
 
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
 
+
+count = 0
 while True:
     time.sleep(1)
-    pyautogui.moveTo(660, 260, duration=1)
-    pyautogui.mouseDown(button='left')
-    pyautogui.moveTo(670, 270, duration=1)
-    pyautogui.mouseUp(button='left')
-    time.sleep(1)
 
+    if count == 0:
+        pyautogui.moveTo(663, 280, duration=1)
+        pyautogui.mouseDown(button='left')
+        pyautogui.moveTo(668, 285, duration=1)
+        pyautogui.mouseUp(button='left')
+        count += 1
+        print('______')
+        print('c:', count)
+        print('______')
+    elif count == 1:
+        pyautogui.moveTo(669, 265, duration=1)
+        pyautogui.mouseDown(button='left')
+        pyautogui.moveTo(678, 275, duration=1)
+        pyautogui.mouseUp(button='left')
+        count += 1
+        print('______')
+        print('c:', count)
+        print('______')
+    else:
+        pyautogui.moveTo(685, 255, duration=1)
+        pyautogui.mouseDown(button='left')
+        pyautogui.moveTo(695, 260, duration=1)
+        pyautogui.mouseUp(button='left')
+        count = 0
+        print('______')
+        print('c:', count)
+        print('______')
+
+    time.sleep(1)
     screen_record()
     time.sleep(0.01)
-
     ss()
